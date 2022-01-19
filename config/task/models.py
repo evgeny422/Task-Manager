@@ -26,8 +26,8 @@ class Task(models.Model):
     category = models.PositiveSmallIntegerField('Тип задачи', choices=RATE_CHOICES, null=True)
     started_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(default=None, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(editable=False, default=timezone.now())
+    created_at = models.DateTimeField(editable=False)
+    updated_at = models.DateTimeField(editable=False)
     deleted_at = models.DateTimeField(default=None, null=True,blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
