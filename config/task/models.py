@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 import datetime
 
+from django.utils import timezone
 from safedelete import SOFT_DELETE
 from safedelete.models import SafeDeleteModel
 
@@ -26,18 +27,18 @@ class Task(models.Model):
     started_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(default=None, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(editable=False, default=timezone.now())
     deleted_at = models.DateTimeField(default=None, null=True,blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'URL: {self.url}- {self.category}-Status: {self.status}'
 
+
+
     def save(self, *args, **kwargs):
         """"Обновление поля self.updated_at при обновлении контента"""
-        creating = not self.pk
-        old_content = self.content
-        super().save(*args, **kwargs)
-        new_content = self.content
-        if old_content != new_content or creating:
-            self.updated_at = datetime.datetime.now()
+        if not self.id:
+            self.created_at = timezone.now()
+        self.updated_at = timezone.now()
+        return super(Task, self).save(*args, **kwargs)
