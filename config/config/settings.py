@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'safedelete',
+    'django_filters',
 
     'task.apps.TaskConfig',
 ]
