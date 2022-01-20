@@ -1,17 +1,11 @@
 from datetime import datetime
-
 from django.shortcuts import redirect
-
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, viewsets
-from rest_framework.decorators import action
+from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
-from .logic import add_XML
-
 from .models import Task
 from .serializers import *
-from django.utils import timezone
 
 
 class TaskListView(viewsets.ModelViewSet):
@@ -34,9 +28,8 @@ class TaskViewSet(viewsets.ViewSet):
         queryset.is_active = False
         queryset.deleted_at = datetime.now()
         queryset.save()
-        return redirect('task-list')
+        return redirect('task_list')
 
 
 class AddTaskViewSet(viewsets.ModelViewSet):
-    """Добавление рейтинга фильму"""
     serializer_class = TaskCreateSerializer
