@@ -17,3 +17,23 @@ class TaskDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
+
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    """Добавление задач пользователем"""
+
+    class Meta:
+        model = Task
+        fields = ("url", "category", "user")
+
+    def create(self, validated_data):
+        task = Task.objects.create(
+            url=validated_data.get('url', None),
+            category=validated_data.get('category', None),
+            user=validated_data.get('user', ),
+        )
+        task.save()
+        return task
+
+
+

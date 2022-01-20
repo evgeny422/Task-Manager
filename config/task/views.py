@@ -1,12 +1,16 @@
+from datetime import datetime
+
 from django.shortcuts import redirect
 from django_filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
+from .logic import add_XML
 
 from .models import Task
 from .serializers import *
+from django.utils import timezone
 
 
 class TaskViewSet(viewsets.ViewSet):
@@ -25,12 +29,16 @@ class TaskViewSet(viewsets.ViewSet):
         serializer = TaskDetailSerializer(queryset)
         return Response(serializer.data)
 
-    def create(self, request):
-        pass
-
     def delete(self, request, pk=None):
         queryset = Task.objects.get(pk=pk)
         queryset.is_active = False
-        queryset.deleted_at = datetime.datetime.now()
+        queryset.deleted_at = datetime.now()
         queryset.save()
         return redirect('task-list')
+
+
+class AddTaskViewSet(viewsets.ModelViewSet):
+    """Добавление рейтинга фильму"""
+    serializer_class = TaskCreateSerializer
+
+

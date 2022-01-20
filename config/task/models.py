@@ -1,10 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
-import datetime
 
+from .logic import add_XML
 from django.utils import timezone
-from safedelete import SOFT_DELETE
-from safedelete.models import SafeDeleteModel
 
 
 class Task(models.Model):
@@ -19,8 +17,8 @@ class Task(models.Model):
     )
 
     url = models.CharField('url', max_length=150)
-    content = models.TextField()
-    response = models.TextField()
+    content = models.TextField(blank=True)
+    response = models.TextField(blank=True)
     status = models.BooleanField('Выполнено', default=False)
     is_active = models.BooleanField(default=True)
     category = models.PositiveSmallIntegerField('Тип задачи', choices=RATE_CHOICES, null=True)
@@ -28,17 +26,16 @@ class Task(models.Model):
     finished_at = models.DateTimeField(default=None, null=True, blank=True)
     created_at = models.DateTimeField(editable=False)
     updated_at = models.DateTimeField(editable=False)
-    deleted_at = models.DateTimeField(default=None, null=True,blank=True)
+    deleted_at = models.DateTimeField(default=None, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f'URL: {self.url}- {self.category}-Status: {self.status}'
 
-
-
     def save(self, *args, **kwargs):
-        """"Обновление поля self.updated_at при обновлении контента"""
+        """"Обновление поля self.updated_at при обновлении контента + XML """
         if not self.id:
             self.created_at = timezone.now()
+            self.content = add_XML(self.url)
         self.updated_at = timezone.now()
         return super(Task, self).save(*args, **kwargs)
