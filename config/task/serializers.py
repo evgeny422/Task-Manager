@@ -8,7 +8,7 @@ class TaskListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ("url", "user", "category",)
+        fields = ("url", "user", "category", 'started_at', 'created_at')
 
 
 class TaskDetailSerializer(serializers.ModelSerializer):
@@ -34,6 +34,3 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         )
         task.save()
         return task
-
-
-
