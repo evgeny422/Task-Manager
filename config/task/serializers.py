@@ -3,8 +3,16 @@ from rest_framework import serializers
 from .models import *
 
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "email")
+
+
 class TaskListSerializer(serializers.ModelSerializer):
     """Вывод всех задач"""
+
+    user = UserDetailSerializer(read_only=True)
 
     class Meta:
         model = Task
