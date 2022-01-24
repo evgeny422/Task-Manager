@@ -8,7 +8,7 @@ url_task_create = 'http://127.0.0.1:8000/api/v1/task/create'
 def get_tasks():
     token = '51860d376dfd90a070e0b8d8f7fcdd5141bf31c7'
     header = {
-        "Authorization": f"{token}"
+        "Authorization": f"{token}",
     }
     url = 'http://127.0.0.1:8000/api/v1/task/'
     response = requests.get(url, headers=header)
@@ -60,12 +60,12 @@ def main():
 
 # print(main())
 # print(get_tasks())
-
-
+access_token = '7d4cc4bbef69cfdf27bf05cdf221ebbb98d2dbcd'
 header = {
-    "Authorization": "51860d376dfd90a070e0b8d8f7fcdd5141bf31c7",
-}
+    'Content-Type': 'application/json',
+    'Authorization': 'Token {}'.format(access_token)}
 
-test_url = 'http://127.0.0.1:8000/api/v1/task/'
-response = requests.get(test_url, headers=header)
+session = requests.Session()
+test_url = 'http://127.0.0.1:8000/api/v1/task/22'
+response = session.get(url=test_url, headers=header)
 print(response.json())

@@ -36,6 +36,6 @@ class Task(models.Model):
         """"Обновление поля self.updated_at при обновлении контента + XML """
         if not self.id:
             self.created_at = timezone.now()
-            self.content = add_XML(self.url)
+            self.content, self.response = add_XML(self.url)
         self.updated_at = timezone.now()
         return super(Task, self).save(*args, **kwargs)

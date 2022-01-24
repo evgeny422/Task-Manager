@@ -1,27 +1,33 @@
 from datetime import datetime
+
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .filters import IsOwnerFilterBackend
+
 from .models import Task
-from .permission import IsOwnerOrStaffOrReadOnly
+
 from .serializers import *
 
 
-class TaskListView(viewsets.ModelViewSet):
-    queryset = Task.objects.filter(is_active=True)
+class TaskSetView(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
     serializer_class = TaskListSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter, IsOwnerFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter, ]
     filter_fields = ['category', 'user']  # ?user= ...
     search_fields = ['url', 'category']  # ?search= ...
     ordering_fields = ['started_at', 'created_at']  # ?ordering= ...
-    permission_classes = [IsOwnerOrStaffOrReadOnly]  # [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
+    def list(self, request, *args, **kwargs):
+        queryset = Task.objects.select_related('user').filter(is_active=True, user=request.user.id)
+        filtered_queryset = self.filter_queryset(queryset)
+        serializer = TaskListSerializer(filtered_queryset, many=True)
+        return Response(serializer.data)
 
-class TaskViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         queryset = Task.objects.get(pk=pk)
         serializer = TaskDetailSerializer(queryset)
@@ -34,6 +40,14 @@ class TaskViewSet(viewsets.ViewSet):
         queryset.save()
         return redirect('task_list')
 
+    def create(self, request, *args, **kwargs):
+        serializer = TaskCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-class AddTaskViewSet(viewsets.ModelViewSet):
-    serializer_class = TaskCreateSerializer
+    #   return redirect('task_list')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

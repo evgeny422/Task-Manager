@@ -4,6 +4,7 @@ from .models import *
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    """"Описание пользователя"""
     class Meta:
         model = User
         fields = ("id", "username", "first_name", "last_name", "email")
