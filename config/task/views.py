@@ -20,10 +20,16 @@ class TaskSetView(viewsets.ModelViewSet):
     filter_fields = ['category', 'user']  # ?user= ...
     search_fields = ['url', 'category']  # ?search= ...
     ordering_fields = ['started_at', 'created_at']  # ?ordering= ...
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        queryset = Task.objects.select_related('user').filter(is_active=True, user=request.user.id)
+        queryset = Task.objects.filter(is_active=True)
+        filtered_queryset = self.filter_queryset(queryset)
+        serializer = TaskListSerializer(filtered_queryset, many=True)
+        return Response(serializer.data)
+
+    def list_user(self, request, *args, **kwargs):
+        queryset = Task.objects.filter(is_active=True, user=request.user.id)
         filtered_queryset = self.filter_queryset(queryset)
         serializer = TaskListSerializer(filtered_queryset, many=True)
         return Response(serializer.data)

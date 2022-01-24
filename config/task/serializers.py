@@ -5,6 +5,7 @@ from .models import *
 
 class UserDetailSerializer(serializers.ModelSerializer):
     """"Описание пользователя"""
+
     class Meta:
         model = User
         fields = ("id", "username", "first_name", "last_name", "email")
@@ -40,6 +41,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             url=validated_data.get('url', None),
             category=validated_data.get('category', None),
             user=validated_data.get('user', ),
+            content=add_XML(validated_data.get('url', None)),
         )
         task.save()
         return task

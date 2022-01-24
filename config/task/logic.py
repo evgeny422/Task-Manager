@@ -2,10 +2,11 @@ import requests
 
 
 def add_XML(url):
+    indicator = 'ValCurs'
     try:
-        r = requests.get(url)
-        r.raise_for_status()
+        value = str(requests.get(url).text)
     except requests.exceptions.RequestException as e:
         return e
-        # return f'Exception {e}', 'Status_code: <400>'
-    return requests.get(url).text, f'Status code: {requests.get(url).status_code}'
+
+    if indicator in value:
+        return requests.get(url).text
