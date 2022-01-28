@@ -18,7 +18,7 @@ class Task(models.Model):
 
     url = models.CharField('url', max_length=150)
     content = models.TextField(blank=True)
-    response = models.TextField(blank=True)
+    response = models.TextField(default=None, null=True)
     status = models.BooleanField('Выполнено', default=False)
     is_active = models.BooleanField(default=True)
     category = models.PositiveSmallIntegerField('Тип задачи', choices=RATE_CHOICES, null=True)

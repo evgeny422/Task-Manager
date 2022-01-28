@@ -1,12 +1,14 @@
 from datetime import datetime
 
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from .models import Task
 
@@ -43,7 +45,7 @@ class TaskSetView(viewsets.ModelViewSet):
         serializer = TaskDetailSerializer(queryset)
         return Response(serializer.data)
 
-    def delete(self, request, pk=None):
+    def finish(self, request, pk=None):
         """"Soft-delete по id"""
         queryset = Task.objects.get(pk=pk)
         queryset.is_active = False
@@ -64,11 +66,23 @@ class TaskSetView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
+
 
 def method_get_create(request):
     """"Get-method создания задачи"""
-    url, category = request.GET.get('url', None), request.GET.get('cat', 1)
-    Task.objects.create(user=request.user, url=url, category=category, content=add_XML(url))
+    url = request.GET.get('url', None)
+    category = request.GET.get('cat', 1)
+    if url is None:
+        raise Exception
+    Task.objects.create(
+        user=request.user,
+        url=url,
+        category=category,
+        content=add_XML(url)
+    )
     return redirect('task_list')
 
 
@@ -77,6 +91,14 @@ def method_get_update(request, pk=None):
     default_task = Task.objects.get(id=pk)
     url = request.GET.get('url', default_task.url)
     category = request.GET.get('cat', default_task.category)
-    Task.objects.filter(id=pk).update(url=url, category=category, content=add_XML(url),
-                                      created_at=default_task.created_at, updated_at=timezone.now())
+    Task.objects.filter(id=pk).update(
+        url=url,
+        category=category,
+        content=add_XML(url),
+        created_at=default_task.created_at,
+        updated_at=timezone.now()
+    )
     return redirect('task_list')
+
+
+
