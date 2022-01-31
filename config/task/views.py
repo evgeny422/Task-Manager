@@ -73,9 +73,9 @@ class TaskSetView(viewsets.ModelViewSet):
 
 def method_get_create(request):
     """"Get-method создания задачи"""
-    url = request.GET.get('url', None)
+    url = request.GET.get('url')
     category = request.GET.get('cat', 1)
-    if url is None:
+    if not url:
         raise Exception
     Task.objects.create(
         user=request.user,
@@ -86,19 +86,6 @@ def method_get_create(request):
     return redirect('task_list')
 
 
-def method_get_update(request, pk=None):
-    """"Update-get-method"""
-    default_task = Task.objects.get(id=pk)
-    url = request.GET.get('url', default_task.url)
-    category = request.GET.get('cat', default_task.category)
-    Task.objects.filter(id=pk).update(
-        url=url,
-        category=category,
-        content=add_XML(url),
-        created_at=default_task.created_at,
-        updated_at=timezone.now()
-    )
-    return redirect('task_list')
 
 
 
