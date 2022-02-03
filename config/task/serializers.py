@@ -46,15 +46,3 @@ class TaskCreateSerializer(serializers.ModelSerializer):
         task.save()
         return task
 
-
-class ResponseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = ('response',)
-
-    def create(self, validated_data):
-        task, _ = Task.objects.update_or_create(
-            id=validated_data.get('id', None),
-            response=validated_data.get('response', None),
-        )
-        return task

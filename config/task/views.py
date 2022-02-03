@@ -1,16 +1,12 @@
 from datetime import datetime
 
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, status
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-
-from .models import Task
 
 from .serializers import *
 
@@ -84,8 +80,3 @@ def method_get_create(request):
         content=add_XML(url)
     )
     return redirect('task_list')
-
-
-
-
-

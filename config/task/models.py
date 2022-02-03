@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from .logic import add_XML
 from django.utils import timezone
 
 
@@ -36,6 +35,5 @@ class Task(models.Model):
         """"Обновление поля self.updated_at при обновлении контента + XML """
         if not self.id:
             self.created_at = timezone.now()
-            # self.content, self.response = add_XML(self.url)
         self.updated_at = timezone.now()
         return super(Task, self).save(*args, **kwargs)
