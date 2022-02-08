@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 
@@ -8,6 +9,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from .logic import add_XML
 from .serializers import *
 
 
@@ -80,3 +82,12 @@ def method_get_create(request):
         content=add_XML(url)
     )
     return redirect('task_list')
+
+class TaskListView(ListView):
+    model = Task
+    queryset = Task.objects.all()
+    template_name = 'tasks/task_list.html'
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'tasks/task_detail.html'
