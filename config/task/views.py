@@ -81,13 +81,27 @@ def method_get_create(request):
         category=category,
         content=add_XML(url)
     )
-    return redirect('task_list')
+    return redirect('tasks')
+
 
 class TaskListView(ListView):
     model = Task
     queryset = Task.objects.all()
     template_name = 'tasks/task_list.html'
 
+
 class TaskDetailView(DetailView):
     model = Task
     template_name = 'tasks/task_detail.html'
+
+
+class Search(ListView):
+    template_name = 'tasks/task_list.html'
+
+    def get_queryset(self):
+        return Task.objects.filter(url__icontains=self.request.GET.get("q"))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["q"] = self.request.GET.get("q")
+        return context

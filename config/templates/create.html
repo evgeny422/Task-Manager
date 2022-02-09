@@ -1,25 +1,22 @@
 <nav class="navbar navbar-light bg-light">
     <div style="display:flex;">
         <div class="container-fluid">
-            <form class="d-flex" action="#" method="get">
-                <input class="form-control mr-2" type="search" placeholder="URL" name="s" aria-label="Search">
+            <form class="d-flex" action="{% url 'create_task' %}" method="get">
+                <input class="form-control mr-2" type="search" placeholder="URL" name="url" aria-label="Search">
                 <button type="submit" class="btn btn-outline-dark" type="submit">
-                    <a href="#" style="text-decoration:none;">
-                        Create
-                    </a>
+                    Create
                 </button>
             </form>
         </div>
 
         <div class="container-fluid">
-            <form class="d-flex" action="#" method="get">
+            <form class="d-flex" action="{% url 'search' %}" method="get">
                 <input class="form-control mr-2" type="search" placeholder="URL" name="q" aria-label="Search">
                 <button type="submit" class="btn btn-outline-dark" type="submit">
-                    <a href="#" style="text-decoration:none;">
-                        Search
-                    </a>
+                    Search
                 </button>
             </form>
         </div>
     </div>
 </nav>
+
