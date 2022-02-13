@@ -41,7 +41,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             url=validated_data.get('url', None),
             category=validated_data.get('category', None),
             user=validated_data.get('user', ),
-            content=add_XML(validated_data.get('url', None)),
+            content=add_xml(validated_data.get('url', None)),
         )
         task.save()
         return task

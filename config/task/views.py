@@ -9,7 +9,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from .logic import add_XML
+from .exception_handling_func import base_view
+from .logic import add_xml
 from .serializers import *
 
 
@@ -59,8 +60,6 @@ class TaskSetView(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    #   return redirect('task_list')
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -69,33 +68,37 @@ class TaskSetView(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 
+@base_view
 def method_get_create(request):
     """"Get-method создания задачи"""
     url = request.GET.get('url')
     category = request.GET.get('cat', 1)
-    if not url:
+    if (not url) or (url is None):
         raise Exception
     Task.objects.create(
         user=request.user,
         url=url,
         category=category,
-        content=add_XML(url)
+        content=add_xml(url)
     )
     return redirect('tasks')
 
 
 class TaskListView(ListView):
+    """Список задач"""
     model = Task
     queryset = Task.objects.all()
     template_name = 'tasks/task_list.html'
 
 
 class TaskDetailView(DetailView):
+    """Задача по id"""
     model = Task
     template_name = 'tasks/task_detail.html'
 
 
 class Search(ListView):
+    """Поиск задачи по url"""
     template_name = 'tasks/task_list.html'
 
     def get_queryset(self):

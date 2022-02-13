@@ -1,7 +1,7 @@
 import requests
 
 
-def add_XML(url):
+def add_xml(url):
     try:
         response = requests.get(url)
         value = response.text
