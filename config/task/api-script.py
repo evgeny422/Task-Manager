@@ -1,4 +1,5 @@
 import requests
+import schedule
 
 from config.task.XML_validation import xml_valid
 
@@ -62,6 +63,10 @@ class ConnectionScript:
         return response.status_code
 
 
+def main():
+    schedule.every(10).minutes.do(ConnectionScript.get_response())
+
+
 ConnectionScript.get_response()
 if __name__ == '__main__':
-    ConnectionScript.get_response()
+    main()
