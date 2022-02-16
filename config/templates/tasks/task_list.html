@@ -19,19 +19,20 @@
         <td>{{task.status}}</td>
         <td>{{task.category}}</td>
         <td>
-            <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-secondary">
-                    <a href="{% url 'task_id' task.id %}" style="text-decoration:none;">
-                        Detail
-                    </a>
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    About
-                </button>
-                <button type="button" class="btn btn-secondary">
+
+            <button type="button" class="btn btn-secondary">
+                <a href="{% url 'task_id' task.id %}" style="text-decoration:none;">
+                    Detail
+                </a>
+            </button>
+            {% if task.package %}
+            <button type="button" class="btn btn-outline-danger">
+                <a href="{% url 'add_to_queue' task.id %}" style="text-decoration:none;">
                     Check
-                </button>
-            </div>
+                </a>
+            </button>
+            {% endif %}
+
         </td>
     </tr>
     {%endfor%}

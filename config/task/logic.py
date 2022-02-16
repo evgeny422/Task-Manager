@@ -13,3 +13,8 @@ def add_xml(url):
         return value
     else:
         raise requests.exceptions.FileModeWarning
+
+
+def content_check_xml(packageId):
+    content = f'<Check><packageId>{packageId}</packageId></Check>'
+    return content

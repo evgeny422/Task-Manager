@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     'task.apps.TaskConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [

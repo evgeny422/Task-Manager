@@ -1,8 +1,6 @@
 import requests
 import schedule
 
-from config.task.XML_validation import xml_valid
-
 
 class ConnectionScript:
     """"""
@@ -30,11 +28,7 @@ class ConnectionScript:
             task_id = task_queue[0]['id']
             task_url = url + f'{task_id}/'
             task = requests.get(task_url).json()
-            if not xml_valid(task['content']):
-                requests.patch(task_url + 'update/', data={
-                    'response': 'XML not valid',
-                }, headers=self.header)
-                raise Exception
+
             """Передаем XML для валидации"""
             # try:
             #     response_validate = requests.post('validate_url', data={'task': task['content']}, headers=self.header)
@@ -46,14 +40,37 @@ class ConnectionScript:
             # except requests.exceptions.RequestException as e:
             #     raise e
 
-            """Выполнение задачи"""
-            # PackageID = requests.post('execute_url', data={'task': task['content']}, headers=self.header)
+            # """Выполнение задачи"""
+            # try:
+            #     package = requests.post('execute_url', data={'task': task['content']}, headers=self.header)
+            # except requests.exceptions.RequestException as e:
+            #     raise e
+            #
+            # if 'Error' in package:
+            #     """Если получаем ошибку"""
+            #
+            #     requests.patch(task_url + 'update/', data={
+            #         'response': package['Error'],
+            #         'is_active': False,
+            #         'status': 2,
+            #     }, headers=self.header)
+            #
+            # elif 'PackageID' in package:
+            #     """При успешном выполнении"""
+            #
+            #     requests.patch(task_url + 'update/', data={
+            #         'response': package['RESPONSE'],
+            #         'is_active': False,
+            #         'status': 1,
+            #         'package': package['PackageID'],
+            #     }, headers=self.header)
 
             """Статус - выполнено + response"""
             requests.patch(task_url + 'update/', data={
                 'response': 'done',
-                'is_active': False,
-                # 'package' : PackageID,
+                # 'is_active': False,
+                'status': 1,
+                # 'package' : package,
             }, headers=self.header)
 
             task_queue.clear()
