@@ -4,14 +4,14 @@ a = '<?xml version="1.0" encoding="windows-1251"?>ValCurs Date="08.02.2022" name
 
 def xml_valid(content):
     stack = []
-    flVerify = True
+    verify = True
 
     for lt in content:
         if lt in "<([{":
             stack.append(lt)
         elif lt in ")]}>":
             if len(stack) == 0:
-                flVerify = False
+                verify = False
                 break
 
             br = stack.pop()
@@ -24,11 +24,11 @@ def xml_valid(content):
             if br == '<' and lt == '>':
                 continue
 
-            flVerify = False
+            verify = False
             break
 
     """По итогу проверки стен должен быть пустым"""
-    if flVerify and len(stack) == 0:
+    if verify and len(stack) == 0:
         return True
     else:
         return False
@@ -36,5 +36,3 @@ def xml_valid(content):
 
 if __name__ == '__main__':
     xml_valid(a)
-
-

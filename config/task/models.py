@@ -46,7 +46,7 @@ class Task(models.Model):
 
     def save(self, *args, **kwargs):
         """" Обновление поля self.updated_at при обновлении контента + XML """
-        if (not self.id) and (not self.package):
+        if (not self.pk) and (not self.package):
             self.created_at = timezone.now()
             self.content = add_xml(self.url)
 
@@ -56,4 +56,3 @@ class Task(models.Model):
     class Meta:
         verbose_name = "Задача"
         verbose_name_plural = "Задачи"
-
