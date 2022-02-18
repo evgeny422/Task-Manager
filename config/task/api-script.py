@@ -18,11 +18,11 @@ class ConnectionScript:
     def get_response(self):
         task_queue = []
         url = self.base_url + '/api/v1/task/'
-        response = requests.get(url, headers=self.header)
-        content = response.json()
+        task_response = requests.get(url, headers=self.header)
+        content = task_response.json()
 
         """Проверка наличия активных задач"""
-        while response.status_code == 200 and len(content) != 0:
+        while task_response.status_code == 200 and len(content) != 0:
             """Извлекаем по одной задаче"""
             task_queue.append(content.pop(0))
             task_id = task_queue[0]['id']
@@ -42,32 +42,32 @@ class ConnectionScript:
 
             # """Выполнение задачи"""
             # try:
-            #     package = requests.post('execute_url', data={'task': task['content']}, headers=self.header)
+            #     response = requests.post('execute_url', data={'task': task['content']}, headers=self.header)
             # except requests.exceptions.RequestException as e:
             #     raise e
             #
-            # if 'Error' in package:
+            # if 'Error' in response:
             #     """Если получаем ошибку"""
             #
             #     requests.patch(task_url + 'update/', data={
-            #         'response': package['Error'],
+            #         'task_response': str(response['RESPONSE']),
             #         'is_active': False,
             #         'status': 2,
             #     }, headers=self.header)
             #
-            # elif 'PackageID' in package:
+            # elif 'PackageID' in response:
             #     """При успешном выполнении"""
             #
             #     requests.patch(task_url + 'update/', data={
-            #         'response': package['RESPONSE'],
+            #         'task_response': str(response['RESPONSE']),
             #         'is_active': False,
             #         'status': 1,
-            #         'package': package['PackageID'],
+            #         'package': response['PackageID'],
             #     }, headers=self.header)
 
-            """Статус - выполнено + response"""
+            """Статус - выполнено + task_response"""
             requests.patch(task_url + 'update/', data={
-                'response': 'done',
+                'task_response': 'w8',
                 # 'is_active': False,
                 'status': 1,
                 # 'package' : package,
@@ -75,9 +75,9 @@ class ConnectionScript:
 
             task_queue.clear()
 
-            response = requests.get(url, headers=self.header)
+            task_response = requests.get(url, headers=self.header)
 
-        return response.status_code
+        return task_response.status_code
 
 
 def main():

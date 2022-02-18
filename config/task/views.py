@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
 from .XML_validation import xml_valid
+from .class_exception_handling import BaseView
 from .exception_handling_func import base_view
 from .logic import add_xml, content_check_xml
 from .models import Task
