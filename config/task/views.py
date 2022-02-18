@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 
 from .XML_validation import xml_valid
-from .class_exception_handling import BaseView
+
 from .exception_handling_func import base_view
 from .logic import add_xml, content_check_xml
 from .models import Task
@@ -17,10 +17,10 @@ def method_get_create(request):
     category = request.GET.get('cat', 1)
     content = add_xml(url)
     if not xml_valid(content):
-        raise Exception
+        raise Exception('XML FILE NOT VALID')
 
     if (not url) or (url is None):
-        raise Exception
+        raise Exception('HAVE NOT URL')
 
     Task.objects.create(
         user=request.user,
@@ -69,8 +69,9 @@ class Search(ListView):
     """Поиск задачи по url"""
     template_name = 'tasks/task_list.html'
 
+    @base_view
     def get_queryset(self):
-        return Task.objects.filter(url__icontains=self.request.GET.get("q"))
+        return Task.objects.filter(url__icontains=self.request.GET.get("q").strip())
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

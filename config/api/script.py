@@ -39,21 +39,24 @@ class ApiConnection:
             'header': self.header,
         }
 
-    @staticmethod
-    def get(url):
+    def get(self, url):
         try:
-            response = requests.get(url, headers=ApiConnection.header)
+            response = requests.get(url, headers=self.header)
             return response and response.status_code
         except:
             raise requests.exceptions.RequestException
 
-    @staticmethod
-    def post(url, data: Data):
-        return requests.post(url, data=data, headers=ApiConnection.header)
+    def post(self, url, data: Data):
+        try:
+            return requests.post(url, data=data, headers=self.header)
+        except:
+            raise requests.exceptions.RequestException
 
-    @staticmethod
-    def patch(url, data: Data):
-        return requests.patch(url, data=data, headers=ApiConnection.header)
+    def patch(self, url, data: Data):
+        try:
+            return requests.patch(url, data=data, headers=self.header)
+        except:
+            raise requests.exceptions.RequestException
 
 
 class SuccessData(Data):
@@ -118,9 +121,17 @@ class CheckTasksScript:
             getting_data = compare(response=response['Response'])
             processing_response = ApiConnection.patch(
                 url=str(ApiConnection.base_url) + f'/api/v1/task/{task_id}/update',
-                data=getting_data
+                data=getting_data.get_message()
             )
 
             response, status = ApiConnection.get(url=ApiConnection.base_url + '/api/v1/task')
 
         return 'Queue is empty'
+
+
+def main():
+    CheckTasksScript.get_response()
+
+
+if __name__ == '__main__':
+    main()
