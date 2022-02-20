@@ -14,13 +14,12 @@ from .models import Task
 def method_get_create(request):
     """"Get-method создания задачи"""
     url = request.GET.get('url')
+    if (not url) or (url is None):
+        raise Exception('HAVE NOT URL')
     category = request.GET.get('cat', 1)
     content = add_xml(url)
     if not xml_valid(content):
         raise Exception('XML FILE NOT VALID')
-
-    if (not url) or (url is None):
-        raise Exception('HAVE NOT URL')
 
     Task.objects.create(
         user=request.user,
