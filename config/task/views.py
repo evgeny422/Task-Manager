@@ -14,7 +14,7 @@ from .models import Task
 def method_get_create(request):
     """"Get-method создания задачи"""
     url = request.GET.get('url')
-    if (not url) or (url is None):
+    if not url:
         raise Exception('HAVE NOT URL')
     category = request.GET.get('cat', 1)
     content = add_xml(url)
