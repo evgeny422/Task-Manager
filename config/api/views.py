@@ -13,7 +13,9 @@ from task.models import Task
 from .serializers import TaskListSerializer, TaskDetailSerializer, TaskCreateSerializer
 
 import sys
+
 sys.path.append(".")
+
 
 class TaskSetView(viewsets.ModelViewSet):
     queryset = Task.objects.all()
@@ -23,7 +25,7 @@ class TaskSetView(viewsets.ModelViewSet):
     search_fields = ['url', 'category']  # ?search= ...
     ordering_fields = ['started_at', 'created_at']  # ?ordering= ...
 
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         # if 'Token-api' in request.headers:
@@ -56,6 +58,7 @@ class TaskSetView(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """"Post-method создания задачи"""
+
         serializer = TaskCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

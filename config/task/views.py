@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.http import Http404
 from django.shortcuts import redirect
+from django.views import View
 from django.views.generic import ListView, DetailView
 
 from .XML_validation import xml_valid
